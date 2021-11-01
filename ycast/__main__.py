@@ -13,7 +13,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y
 def launch_server():
     parser = argparse.ArgumentParser(description='vTuner API emulation')
     parser.add_argument('-c', action='store', dest='config', help='Station configuration', default=None)
-    parser.add_argument('-s', action='store', dest='simple', help='Simple output', default=None)
+    parser.add_argument('-s', action='store', dest='simple', help='Simple output', default=False)
     parser.add_argument('-l', action='store', dest='address', help='Listen address', default='0.0.0.0')
     parser.add_argument('-p', action='store', dest='port', type=int, help='Listen port', default=80)
     parser.add_argument('-d', action='store_true', dest='debug', help='Enable debug logging')
