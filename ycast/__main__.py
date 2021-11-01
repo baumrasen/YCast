@@ -22,6 +22,7 @@ def launch_server():
     if arguments.debug:
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug("Debug logging enabled")
+        logging.debug("Simple output is set to " + arguments.simple)
     else:
         logging.getLogger('werkzeug').setLevel(logging.WARNING)
     server.run(arguments.config, arguments.address, arguments.port, arguments.simple)

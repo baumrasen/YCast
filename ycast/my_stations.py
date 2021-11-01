@@ -14,6 +14,7 @@ simple_enabled = False
 
 class Station:
     def __init__(self, uid, name, url, category):
+        logging.debug("init my_stations Station")
         self.id = generic.generate_stationid_with_prefix(uid, ID_PREFIX)
         self.name = name
         self.url = url

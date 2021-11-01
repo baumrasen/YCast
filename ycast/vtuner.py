@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import logging
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
@@ -26,6 +27,7 @@ def add_bogus_parameter(url):
 
 class Page:
     def __init__(self):
+        logging.debug("init vtuner Page")
         self.items = []
         self.count = -1
         self.dontcache = False
@@ -58,6 +60,7 @@ class Page:
 
 class Previous:
     def __init__(self, url):
+        logging.debug("init vtuner Previous")
         self.url = url
 
     def to_xml(self):
@@ -70,6 +73,7 @@ class Previous:
 
 class Display:
     def __init__(self, text):
+        logging.debug("init vtuner Display")
         self.text = text
 
     def to_xml(self):
@@ -81,6 +85,7 @@ class Display:
 
 class Search:
     def __init__(self, caption, url):
+        logging.debug("init vtuner Search")
         self.caption = caption
         self.url = url
 
@@ -98,6 +103,7 @@ class Search:
 
 class Directory:
     def __init__(self, title, destination, item_count=-1):
+        logging.debug("init vtuner Directory")
         self.title = title
         self.destination = destination
         self.item_count = item_count
@@ -117,6 +123,7 @@ class Directory:
 
 class Station:
     def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark, simple_enabled):
+        logging.debug("init vtuner Station " + uid)
         self.uid = uid
         self.name = name
         self.description = description
