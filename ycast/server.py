@@ -29,7 +29,7 @@ simple_enabled = False
 app = Flask(__name__)
 
 
-def run(config, address='0.0.0.0', port=8010, simple=None):
+def run(config, address='0.0.0.0', port=8010, simple=False):
     try:
         check_my_stations_feature(config)
         check_simple_feature(simple)
