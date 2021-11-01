@@ -6,8 +6,6 @@ import config
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
-simple_enabled = False
-
 def get_init_token():
     return '<EncryptedToken>0000000000000000</EncryptedToken>'
 
@@ -27,17 +25,9 @@ def add_bogus_parameter(url):
     """
     return url + '?vtuner=true'
 
-def set_simple_enabled(simple):
-    global simple_enabled
-    if simple:
-        simple_enabled = simple
-        logging.debug("vtuner simple_enabled = True " + str(simple_enabled) + ' ' + str(simple))
-    else:
-        logging.debug("vtuner simple_enabled = False " + str(simple_enabled) + ' ' + str(simple))
-
 class Page:
     def __init__(self):
-        logging.debug("init vtuner Page / simple_enabled: " + str(simple_enabled))
+        logging.debug("init vtuner Page / simple_enabled: " + str(config.simple_enabled))
         self.items = []
         self.count = -1
         self.dontcache = False
@@ -62,7 +52,7 @@ class Page:
 
 class Previous:
     def __init__(self, url):
-        logging.debug("init vtuner Previous  / simple_enabled: " + str(simple_enabled) + " - " + url)
+        logging.debug("init vtuner Previous  / simple_enabled: " + str(config.simple_enabled) + " - " + url)
         self.url = url
 
     def to_xml(self):
@@ -75,7 +65,7 @@ class Previous:
 
 class Display:
     def __init__(self, text):
-        logging.debug("init vtuner Display  / simple_enabled: " + str(simple_enabled) + " - " + text)
+        logging.debug("init vtuner Display  / simple_enabled: " + str(config.simple_enabled) + " - " + text)
         self.text = text
 
     def to_xml(self):
@@ -105,7 +95,7 @@ class Search:
 
 class Directory:
     def __init__(self, title, destination, item_count=-1):
-        logging.debug("init vtuner Directory  / simple_enabled: " + str(simple_enabled) + " - " + title)
+        logging.debug("init vtuner Directory  / simple_enabled: " + str(config.simple_enabled) + " - " + title)
         self.title = title
         self.destination = destination
         self.item_count = item_count
@@ -125,7 +115,7 @@ class Directory:
 
 class Station:
     def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark):
-        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + str(simple_enabled))
+        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + str(config.simple_enabled))
         self.uid = uid
         self.name = name
         self.description = description

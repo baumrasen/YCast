@@ -32,7 +32,6 @@ def run(config, address='0.0.0.0', port=8010, simple=False):
     try:
         logging.debug("run server.py " + address)
         check_my_stations_feature(config)
-        check_simple_feature(simple)
         app.run(host=address, port=port)
     except PermissionError:
         logging.error("No permission to create socket. Are you trying to use ports below 1024 without elevated rights?")
@@ -42,9 +41,6 @@ def check_my_stations_feature(config):
     global my_stations_enabled
     my_stations_enabled = my_stations.set_config(config)
 
-def check_simple_feature(simple):
-    if simple:
-        vtuner.set_simple_enabled(simple)
 
 def get_directories_page(subdir, directories, request):
     page = vtuner.Page()
