@@ -24,12 +24,15 @@ PATH_RADIOBROWSER_POPULAR = 'popular'
 
 station_tracking = False
 my_stations_enabled = False
+simple_enabled = False
+
 app = Flask(__name__)
 
 
-def run(config, address='0.0.0.0', port=8010):
+def run(config, address='0.0.0.0', port=8010, simple=None):
     try:
         check_my_stations_feature(config)
+        check_simple_feature(simple)
         app.run(host=address, port=port)
     except PermissionError:
         logging.error("No permission to create socket. Are you trying to use ports below 1024 without elevated rights?")
@@ -39,6 +42,9 @@ def check_my_stations_feature(config):
     global my_stations_enabled
     my_stations_enabled = my_stations.set_config(config)
 
+def check_simple_feature(simple):
+    global simple_enabled
+    simple_enabled = my_stations.set_simple_enabled(simple)
 
 def get_directories_page(subdir, directories, request):
     page = vtuner.Page()
@@ -57,6 +63,7 @@ def get_directories_page(subdir, directories, request):
 
 def get_stations_page(stations, request):
     page = vtuner.Page()
+    page.set_simple_enabled(simple_enabled)
     if len(stations) == 0:
         page.add(vtuner.Display("No stations found"))
         page.set_count(1)

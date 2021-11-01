@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
+simple_enabled = False
 
 def get_init_token():
     return '<EncryptedToken>0000000000000000</EncryptedToken>'
@@ -47,6 +48,13 @@ class Page:
     def to_string(self):
         return XML_HEADER + ET.tostring(self.to_xml()).decode('utf-8')
 
+    def set_simple_enabled(self, simple):
+       global simple_enabled
+       if self.simple:
+          simple_enabled = self.simple
+          return True
+       else:
+          return False
 
 class Previous:
     def __init__(self, url):
@@ -108,7 +116,7 @@ class Directory:
 
 
 class Station:
-    def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark):
+    def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark, simple_enabled):
         self.uid = uid
         self.name = name
         self.description = description
@@ -120,6 +128,7 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
+        self.simple_enabled = simple_enabled
 
     def set_trackurl(self, url):
         self.trackurl = url
@@ -134,7 +143,8 @@ class Station:
         else:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
-        ET.SubElement(item, 'Logo').text = self.icon
+        if not self.simple_enabled:
+            ET.SubElement(item, 'Logo').text = self.icon
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
         ET.SubElement(item, 'StationBandWidth').text = str(self.bitrate)

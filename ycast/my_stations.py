@@ -1,3 +1,4 @@
+
 import logging
 import hashlib
 
@@ -9,7 +10,7 @@ import ycast.generic as generic
 ID_PREFIX = "MY"
 
 config_file = 'stations.yml'
-
+simple_enabled = False
 
 class Station:
     def __init__(self, uid, name, url, category):
@@ -20,8 +21,7 @@ class Station:
         self.icon = None
 
     def to_vtuner(self):
-        return vtuner.Station(self.id, self.name, self.tag, self.url, self.icon, self.tag, None, None, None, None)
-
+        return vtuner.Station(self.id, self.name, self.tag, self.url, self.icon, self.tag, None, None, None, None, simple_enabled)
 
 def set_config(config):
     global config_file
@@ -32,6 +32,13 @@ def set_config(config):
     else:
         return False
 
+def set_simple_enabled(simple):
+    global simple_enabled
+    if simple:
+        simple_enabled = simple
+        return True
+    else:
+        return False
 
 def get_station_by_id(uid):
     my_stations_yaml = get_stations_yaml()
