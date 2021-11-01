@@ -149,11 +149,19 @@ class Station:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
         logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(simple_enabled))
+        
         if simple_enabled is False:
             logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(simple_enabled))
             ET.SubElement(item, 'Logo').text = self.icon
         else:
             logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
+
+        if simple_enabled:
+            logging.debug("init vtuner to_xml4 " + self.icon + " / simple_enabled: " + str(simple_enabled))
+        else:
+            ET.SubElement(item, 'Logo').text = self.icon
+            logging.debug("init vtuner to_xml5 " + self.icon + " / simple_enabled: " + str(simple_enabled))
+
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
         ET.SubElement(item, 'StationBandWidth').text = str(self.bitrate)
