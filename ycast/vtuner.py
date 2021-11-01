@@ -134,6 +134,7 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
+        self.simple = simple_enabled
 
     def set_trackurl(self, url):
         self.trackurl = url
@@ -150,13 +151,13 @@ class Station:
         ET.SubElement(item, 'StationDesc').text = self.description
         logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(simple_enabled))
         
-        if simple_enabled is False:
+        if self.simple == False:
             logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(simple_enabled))
             ET.SubElement(item, 'Logo').text = self.icon
         else:
             logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
 
-        if bool(simple_enabled):
+        if simple_enabled:
             logging.debug("init vtuner to_xml4 " + self.icon + " / simple_enabled: " + str(simple_enabled))
         else:
             ET.SubElement(item, 'Logo').text = self.icon
