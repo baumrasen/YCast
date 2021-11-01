@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import logging
 
 import ycast
-import config
+from ycast import config
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
