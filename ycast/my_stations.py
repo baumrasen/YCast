@@ -10,7 +10,6 @@ import ycast.generic as generic
 ID_PREFIX = "MY"
 
 config_file = 'stations.yml'
-simple_enabled = False
 
 class Station:
     def __init__(self, uid, name, url, category):
@@ -33,16 +32,6 @@ def set_config(config):
     else:
         return False
 
-def set_simple_enabled(simple):
-    global simple_enabled
-    if simple:
-        simple_enabled = simple
-        logging.debug("my_stations simple_enabled = True " + str(simple_enabled))
-        return True
-    else:
-        simple_enabled = simple
-        logging.debug("my_stations simple_enabled = False " + str(simple_enabled))
-        return False
 
 def get_station_by_id(uid):
     my_stations_yaml = get_stations_yaml()
