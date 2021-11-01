@@ -4,7 +4,7 @@ import argparse
 import logging
 import sys
 
-from ycast import __version__, __simple__
+from ycast import __version__
 from ycast import server
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
