@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import logging
 
+import ycast
+
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
 simple_enabled = False
@@ -134,7 +136,7 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
-        self.simple = False
+        self.simple = ycast.simple
 
     def set_trackurl(self, url):
         self.trackurl = url
@@ -150,12 +152,12 @@ class Station:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
 
-        logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(simple_enabled))
+        logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(self.simple))
         if self.simple == False:
-            logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(simple_enabled))
+            logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(self.simple))
             ET.SubElement(item, 'Logo').text = self.icon
         else:
-            logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
+            logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(self.simple))
 
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
