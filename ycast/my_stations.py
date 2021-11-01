@@ -40,6 +40,7 @@ def set_simple_enabled(simple):
         logging.debug("my_stations simple_enabled = True " + str(simple_enabled))
         return True
     else:
+        simple_enabled = simple
         logging.debug("my_stations simple_enabled = False " + str(simple_enabled))
         return False
 

@@ -31,6 +31,7 @@ def set_simple_enabled(simple):
         logging.debug("vtuner simple_enabled = True " + str(simple_enabled) + ' ' + str(simple))
         return True
     else:
+        simple_enabled = simple
         logging.debug("vtuner simple_enabled = False " + str(simple_enabled) + ' ' + str(simple))
         return False
 
