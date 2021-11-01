@@ -3,6 +3,7 @@
 import argparse
 import logging
 import sys
+import config
 
 from ycast import __version__
 from ycast import server
@@ -18,8 +19,9 @@ def launch_server():
     parser.add_argument('-p', action='store', dest='port', type=int, help='Listen port', default=80)
     parser.add_argument('-d', action='store_true', dest='debug', help='Enable debug logging')
     arguments = parser.parse_args()
-    global __simple__
-    __simple__ = arguments.simple
+    
+    config.set_simple_enabled(arguments.simple)
+
     logging.info("YCast (%s) server starting", __version__)
     if arguments.debug:
         logging.getLogger().setLevel(logging.DEBUG)

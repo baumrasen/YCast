@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import logging
 
 import ycast
+import config
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
 
@@ -136,7 +137,7 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
-        self.simple = ycast.__simple__
+        self.simple = config.simple_enabled
 
     def set_trackurl(self, url):
         self.trackurl = url
