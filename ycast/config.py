@@ -2,7 +2,7 @@ import logging
 
 simple_enabled = False
 
-def init():
+def __init__():
     global simple_enabled
 
 def set_simple_enabled(simple):
