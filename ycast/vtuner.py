@@ -152,6 +152,8 @@ class Station:
         if not simple_enabled:
             logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(simple_enabled))
             ET.SubElement(item, 'Logo').text = self.icon
+        else:
+            logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
         ET.SubElement(item, 'StationBandWidth').text = str(self.bitrate)
