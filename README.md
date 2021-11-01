@@ -82,6 +82,14 @@ Python packages:
  * `PyYAML`
  * `Pillow`
  
+## Installation from GIT
+`git pull`
+`python3 setup.py build`
+`python3 setup.py install`
+
+## Start command examplesimple
+`/usr/bin/python3 -m ycast -d -s True -l 127.0.0.1 -p 8010 -c /usr/local/etc/stations.yml`
+
 ## Usage
 
 YCast really does not need much computing power nor bandwidth, i.e. you can run it on a low-spec RISC machine like a Raspberry Pi or a home router.
