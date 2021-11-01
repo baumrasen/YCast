@@ -34,7 +34,7 @@ def set_simple_enabled(simple):
 
 class Page:
     def __init__(self):
-        logging.debug("init vtuner Page")
+        logging.debug("init vtuner Page / simple_enabled: " + str(simple_enabled))
         self.items = []
         self.count = -1
         self.dontcache = False
@@ -59,7 +59,7 @@ class Page:
 
 class Previous:
     def __init__(self, url):
-        logging.debug("init vtuner Previous " + url)
+        logging.debug("init vtuner Previous  / simple_enabled: " + str(simple_enabled) + " - " + url)
         self.url = url
 
     def to_xml(self):
@@ -72,7 +72,7 @@ class Previous:
 
 class Display:
     def __init__(self, text):
-        logging.debug("init vtuner Display " + text)
+        logging.debug("init vtuner Display  / simple_enabled: " + str(simple_enabled) + " - " + text)
         self.text = text
 
     def to_xml(self):
@@ -102,7 +102,7 @@ class Search:
 
 class Directory:
     def __init__(self, title, destination, item_count=-1):
-        logging.debug("init vtuner Directory " + title)
+        logging.debug("init vtuner Directory  / simple_enabled: " + str(simple_enabled) + " - " + title)
         self.title = title
         self.destination = destination
         self.item_count = item_count
@@ -149,19 +149,13 @@ class Station:
         else:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
+
         logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(simple_enabled))
-        
         if self.simple == False:
             logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(simple_enabled))
             ET.SubElement(item, 'Logo').text = self.icon
         else:
             logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
-
-        if simple_enabled:
-            logging.debug("init vtuner to_xml4 " + self.icon + " / simple_enabled: " + str(simple_enabled))
-        else:
-            ET.SubElement(item, 'Logo').text = self.icon
-            logging.debug("init vtuner to_xml5 " + self.icon + " / simple_enabled: " + str(simple_enabled))
 
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
