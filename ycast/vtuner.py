@@ -134,7 +134,7 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
-        self.simple = simple_enabled
+        self.simple = False
 
     def set_trackurl(self, url):
         self.trackurl = url
