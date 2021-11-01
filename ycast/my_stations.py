@@ -22,7 +22,7 @@ class Station:
         self.icon = None
 
     def to_vtuner(self):
-        return vtuner.Station(self.id, self.name, self.tag, self.url, self.icon, self.tag, None, None, None, None, simple_enabled)
+        return vtuner.Station(self.id, self.name, self.tag, self.url, self.icon, self.tag, None, None, None, None)
 
 def set_config(config):
     global config_file

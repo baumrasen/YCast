@@ -24,6 +24,13 @@ def add_bogus_parameter(url):
     """
     return url + '?vtuner=true'
 
+def set_simple_enabled(simple):
+    global simple_enabled
+    if simple:
+        simple_enabled = simple
+        return True
+    else:
+        return False
 
 class Page:
     def __init__(self):
@@ -49,14 +56,6 @@ class Page:
 
     def to_string(self):
         return XML_HEADER + ET.tostring(self.to_xml()).decode('utf-8')
-
-    def set_simple_enabled(self, simple):
-       global simple_enabled
-       if simple:
-          simple_enabled = simple
-          return True
-       else:
-          return False
 
 class Previous:
     def __init__(self, url):
@@ -122,7 +121,7 @@ class Directory:
 
 
 class Station:
-    def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark, simple_enabled):
+    def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark):
         logging.debug("init vtuner Station " + uid + " / simple_enabled: " + str(simple_enabled))
         self.uid = uid
         self.name = name
@@ -135,7 +134,6 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
-        self.simple_enabled = simple_enabled
 
     def set_trackurl(self, url):
         self.trackurl = url
@@ -150,7 +148,7 @@ class Station:
         else:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
-        if not self.simple_enabled:
+        if not simple_enabled:
             ET.SubElement(item, 'Logo').text = self.icon
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location

@@ -46,6 +46,7 @@ def check_my_stations_feature(config):
 def check_simple_feature(simple):
     global simple_enabled
     simple_enabled = my_stations.set_simple_enabled(simple)
+    simple_enabled = vtuner.set_simple_enabled(simple)
 
 def get_directories_page(subdir, directories, request):
     page = vtuner.Page()
