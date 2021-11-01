@@ -50,8 +50,8 @@ class Page:
 
     def set_simple_enabled(self, simple):
        global simple_enabled
-       if self.simple:
-          simple_enabled = self.simple
+       if simple:
+          simple_enabled = simple
           return True
        else:
           return False
