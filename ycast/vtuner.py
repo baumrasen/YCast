@@ -123,7 +123,7 @@ class Directory:
 
 class Station:
     def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark, simple_enabled):
-        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + simple_enabled)
+        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + str(simple_enabled))
         self.uid = uid
         self.name = name
         self.description = description
