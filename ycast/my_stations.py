@@ -37,8 +37,10 @@ def set_simple_enabled(simple):
     global simple_enabled
     if simple:
         simple_enabled = simple
+        logging.debug("my_stations simple_enabled = True " + str(simple_enabled))
         return True
     else:
+        logging.debug("my_stations simple_enabled = False " + str(simple_enabled))
         return False
 
 def get_station_by_id(uid):
