@@ -156,7 +156,7 @@ class Station:
         else:
             logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(simple_enabled))
 
-        if simple_enabled:
+        if bool(simple_enabled):
             logging.debug("init vtuner to_xml4 " + self.icon + " / simple_enabled: " + str(simple_enabled))
         else:
             ET.SubElement(item, 'Logo').text = self.icon
