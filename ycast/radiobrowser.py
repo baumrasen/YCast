@@ -23,8 +23,8 @@ def get_json_attr(json, attr):
 
 class Station:
     def __init__(self, station_json):
-        logging.debug("init radiobrowser Station")
         self.id = generic.generate_stationid_with_prefix(get_json_attr(station_json, 'stationuuid'), ID_PREFIX)
+        logging.debug("init radiobrowser Station " + self.id)
         self.name = get_json_attr(station_json, 'name')
         self.url = get_json_attr(station_json, 'url')
         self.icon = get_json_attr(station_json, 'favicon')

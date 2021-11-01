@@ -60,7 +60,7 @@ class Page:
 
 class Previous:
     def __init__(self, url):
-        logging.debug("init vtuner Previous")
+        logging.debug("init vtuner Previous " + url)
         self.url = url
 
     def to_xml(self):
@@ -73,7 +73,7 @@ class Previous:
 
 class Display:
     def __init__(self, text):
-        logging.debug("init vtuner Display")
+        logging.debug("init vtuner Display " + text)
         self.text = text
 
     def to_xml(self):
@@ -85,7 +85,7 @@ class Display:
 
 class Search:
     def __init__(self, caption, url):
-        logging.debug("init vtuner Search")
+        logging.debug("init vtuner Search " + url)
         self.caption = caption
         self.url = url
 
@@ -103,7 +103,7 @@ class Search:
 
 class Directory:
     def __init__(self, title, destination, item_count=-1):
-        logging.debug("init vtuner Directory")
+        logging.debug("init vtuner Directory " + title)
         self.title = title
         self.destination = destination
         self.item_count = item_count
@@ -123,7 +123,7 @@ class Directory:
 
 class Station:
     def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark, simple_enabled):
-        logging.debug("init vtuner Station " + uid)
+        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + simple_enabled)
         self.uid = uid
         self.name = name
         self.description = description
