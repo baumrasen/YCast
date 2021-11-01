@@ -36,7 +36,7 @@ class Station:
 
     def to_vtuner(self):
         return vtuner.Station(self.id, self.name, ', '.join(self.tags), self.url, self.icon,
-                              self.tags[0], self.countrycode, self.codec, self.bitrate, None)
+                              self.tags[0], self.countrycode, self.codec, self.bitrate, None, None)
 
     def get_playable_url(self):
         try:
