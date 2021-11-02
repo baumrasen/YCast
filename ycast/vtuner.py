@@ -27,7 +27,6 @@ def add_bogus_parameter(url):
 
 class Page:
     def __init__(self):
-        logging.debug("init vtuner Page / simple_enabled: " + str(config.simple_enabled))
         self.items = []
         self.count = -1
         self.dontcache = False
@@ -52,7 +51,6 @@ class Page:
 
 class Previous:
     def __init__(self, url):
-        logging.debug("init vtuner Previous  / simple_enabled: " + str(config.simple_enabled) + " - " + url)
         self.url = url
 
     def to_xml(self):
@@ -65,7 +63,6 @@ class Previous:
 
 class Display:
     def __init__(self, text):
-        logging.debug("init vtuner Display  / simple_enabled: " + str(config.simple_enabled) + " - " + text)
         self.text = text
 
     def to_xml(self):
@@ -77,7 +74,6 @@ class Display:
 
 class Search:
     def __init__(self, caption, url):
-        logging.debug("init vtuner Search " + url)
         self.caption = caption
         self.url = url
 
@@ -95,7 +91,6 @@ class Search:
 
 class Directory:
     def __init__(self, title, destination, item_count=-1):
-        logging.debug("init vtuner Directory  / simple_enabled: " + str(config.simple_enabled) + " - " + title)
         self.title = title
         self.destination = destination
         self.item_count = item_count

@@ -19,17 +19,15 @@ def launch_server():
     parser.add_argument('-p', action='store', dest='port', type=int, help='Listen port', default=80)
     parser.add_argument('-d', action='store_true', dest='debug', help='Enable debug logging')
     arguments = parser.parse_args()
-    
     logging.info("YCast (%s) server starting", __version__)
     config.set_simple_enabled(arguments.simple == 'True' or arguments.simple == 'true' or arguments.simple == '1')
-
     if arguments.debug:
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug("Debug logging enabled")
         logging.debug("Simple output is set to " + str(config.simple_enabled))
     else:
         logging.getLogger('werkzeug').setLevel(logging.WARNING)
-    server.run(arguments.config, arguments.address, arguments.port, arguments.simple)
+    server.run(arguments.config, arguments.address, arguments.port)
 
 
 if __name__ == "__main__":
