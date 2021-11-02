@@ -144,7 +144,7 @@ class Station:
         ET.SubElement(item, 'StationDesc').text = self.description
 
         logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(self.simple))
-        if self.simple == False:
+        if not self.simple:
             logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(self.simple))
             ET.SubElement(item, 'Logo').text = self.icon
         else:
