@@ -26,12 +26,12 @@ def get_stations():
     global stations
     global filetype
     ycast_dir = os.path.dirname(os.path.realpath(__file__))
-    fn_json=ycast_dir + '/stations.json'
-    fn_yaml=ycast_dir + '/stations.yml'
+    fn_json=ycast_dir + '/stations-stations.json'
+    fn_yaml=ycast_dir + '/examples/stations.yml.example'
     try:
         if (filetype == 'auto' and os.path.isfile(fn_yaml)) or filetype=='yaml':
             with open(fn_yaml, 'r') as f:
-                stations = yaml.load(f)
+                stations = yaml.load(f, Loader=yaml.SafeLoader)
         elif  (filetype == 'auto' and os.path.isfile(fn_json)) or filetype=='json':
             with open(fn_json, 'r') as f:
                 stations = json.load(f)

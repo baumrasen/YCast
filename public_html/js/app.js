@@ -17,7 +17,7 @@ class RadioStationCategory {
         }
     }
     hasStations() {
-        return this._stations, length > 0;
+        return this._stations.length > 0;
     }
 }
 class YCastInfos {
@@ -71,11 +71,16 @@ class App {
                 let j = 0;
                 li.innerHTML = cat._name;
                 if (cat.hasStations()) {
+                    const toplist2 = document.createElement('ul');
                     cat._stations.forEach(station => {
-
+                        console.log(station.name);
+                        const li2 = document.createElement('li');
+                        li2.innerHTML = station.name;
+                        toplist2.appendChild(li2)
                     })
+                    li.appendChild(toplist2);
                 }
-                toplist.appendChild(li)
+                toplist.appendChild(li);
             });
         }
         document.getElementById(this._id).appendChild(toplist);
