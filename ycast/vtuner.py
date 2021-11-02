@@ -115,7 +115,6 @@ class Directory:
 
 class Station:
     def __init__(self, uid, name, description, url, icon, genre, location, mime, bitrate, bookmark):
-        logging.debug("init vtuner Station " + uid + " / simple_enabled: " + str(config.simple_enabled))
         self.uid = uid
         self.name = name
         self.description = description
@@ -142,14 +141,8 @@ class Station:
         else:
             ET.SubElement(item, 'StationUrl').text = self.url
         ET.SubElement(item, 'StationDesc').text = self.description
-
-        logging.debug("init vtuner to_xml " + self.uid + " / simple_enabled: " + str(self.simple))
-        if not self.simple:
-            logging.debug("init vtuner to_xml2 " + self.icon + " / simple_enabled: " + str(self.simple))
+        if not config.simple_enabled:
             ET.SubElement(item, 'Logo').text = self.icon
-        else:
-            logging.debug("init vtuner to_xml3 " + self.icon + " / simple_enabled: " + str(self.simple))
-
         ET.SubElement(item, 'StationFormat').text = self.genre
         ET.SubElement(item, 'StationLocation').text = self.location
         ET.SubElement(item, 'StationBandWidth').text = str(self.bitrate)
