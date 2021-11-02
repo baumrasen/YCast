@@ -87,7 +87,7 @@ Python packages:
 `python3 setup.py build`
 `python3 setup.py install`
 
-## Start command examplesimple
+## Start command example for some old AVRs (activate simple xml without icons)
 `/usr/bin/python3 -m ycast -d -s True -l 127.0.0.1 -p 8010 -c /usr/local/etc/stations.yml`
 
 ## Usage

@@ -1,5 +1,3 @@
-import logging
-
 simple_enabled = False
 
 

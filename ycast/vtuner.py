@@ -1,10 +1,9 @@
 import xml.etree.ElementTree as ET
-import logging
 
-import ycast
 from ycast import config
 
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'
+
 
 def get_init_token():
     return '<EncryptedToken>0000000000000000</EncryptedToken>'
@@ -24,6 +23,7 @@ def add_bogus_parameter(url):
     the target URL.
     """
     return url + '?vtuner=true'
+
 
 class Page:
     def __init__(self):
@@ -48,6 +48,7 @@ class Page:
 
     def to_string(self):
         return XML_HEADER + ET.tostring(self.to_xml()).decode('utf-8')
+
 
 class Previous:
     def __init__(self, url):
@@ -121,7 +122,6 @@ class Station:
         self.mime = mime
         self.bitrate = bitrate
         self.bookmark = bookmark
-        self.simple = config.simple_enabled
 
     def set_trackurl(self, url):
         self.trackurl = url

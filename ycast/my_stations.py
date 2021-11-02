@@ -11,6 +11,7 @@ ID_PREFIX = "MY"
 
 config_file = 'stations.yml'
 
+
 class Station:
     def __init__(self, uid, name, url, category):
         self.id = generic.generate_stationid_with_prefix(uid, ID_PREFIX)
@@ -21,6 +22,7 @@ class Station:
 
     def to_vtuner(self):
         return vtuner.Station(self.id, self.name, self.tag, self.url, self.icon, self.tag, None, None, None, None)
+
 
 def set_config(config):
     global config_file
