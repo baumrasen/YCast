@@ -75,7 +75,9 @@ class App {
                     cat._stations.forEach(station => {
                         console.log(station.name);
                         const li2 = document.createElement('li');
-                        li2.innerHTML = station.name;
+                        // li2.innerHTML = station.name;
+                        // li2.href = station._url;
+                        li2.innerHTML = "<a href='"+station._url+"'>"+station.name+"</a>"
                         toplist2.appendChild(li2)
                     })
                     li.appendChild(toplist2);
