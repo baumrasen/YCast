@@ -70,7 +70,7 @@ class App {
                         console.log(xml);
                         // let json = xml2json(xml);
                         // console.log(json);
-                        let xmlitems = xml.getElementsByTagName("ITEM");
+                        // let xmlitems = xml.getElementsByTagName("ITEM");
                         this.infos = new YCastInfos(xml);
                         console.log(this.infos);
                         resolve();
@@ -89,7 +89,8 @@ class App {
             this.infos.categories.forEach(cat => {
                 const li = document.createElement('li');
                 let j = 0;
-                li.innerHTML = cat._name;
+                // li.innerHTML = cat._name;
+                li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button type='button' onclick='loadXMLDoc("+""+")'>Load</button>"
                 if (cat.hasStations()) {
                     const toplist2 = document.createElement('ul');
                     // cat._stations.forEach(station => {
@@ -107,6 +108,57 @@ class App {
         }
         document.getElementById(this._id).appendChild(toplist);
     }
+}
+
+function loadXMLDoc() {
+    // var xmlhttp = new XMLHttpRequest();
+    // xmlhttp.onreadystatechange = function() {
+    //   if (this.readyState == 4 && this.status == 200) {
+    //     myFunction(this);
+    //   }
+    // };
+    // xmlhttp.open("GET", "http://127.0.0.1:8010/ycast/radiobrowser/language/?vtuner=true", true);
+    // xmlhttp.send();
+
+    const promise = new Promise((resolve, reject) => {
+
+        fetch("http://127.0.0.1:8010/ycast/radiobrowser/language/?vtuner=true").then(response => response.text())
+                    .then(data => {
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, "application/xml");
+                        console.log(xml);
+                        // let json = xml2json(xml);
+                        // console.log(json);
+                        // let xmlitems = xml.getElementsByTagName("ITEM");
+                        // this.infos = new YCastInfos(xml);
+                        // console.log(this.infos);
+
+                        let txt = "";
+                        x = xml.getElementsByTagName("Item");
+                        for (i = 0; i< x.length; i++) {
+                            txt += x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue + "<br>";
+                        }
+                        document.getElementById("list").innerHTML = txt;
+
+                        resolve();
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+        });
+        return promise;
+    
+}
+
+function myFunction(xml) {
+    var x, i, xmlDoc, txt;
+    xmlDoc = xml.responseText;
+    txt = "";
+    x = xmlDoc.getElementsByTagName("Item");
+    for (i = 0; i< x.length; i++) {
+      txt += x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue + "<br>";
+    }
+    document.getElementById("list").innerHTML = txt;
 }
 
 var app;
