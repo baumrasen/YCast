@@ -7,17 +7,21 @@ class RadioStation {
 }
 class RadioStationCategory {
 
-    constructor(name, obj) {
+    constructor(type, name, url, urlbak, count) {
+        this._type = type;
         this._name = name;
-        this._stations = [];
-        if (obj != undefined) {
-            Object.keys(obj).forEach(k => {
-                this._stations.push(new RadioStation(k, obj[k]));
-            });
-        }
+        this._url = url;
+        this._urlbak = urlbak;
+        this._count = count;
+        // this._stations = [];
+        // if (obj != undefined) {
+        //     Object.keys(obj).forEach(k => {
+        //         this._stations.push(new RadioStation(k, obj[k]));
+        //     });
+        // }
     }
     hasStations() {
-        return this._stations.length > 0;
+        return this._count > 0;
     }
 }
 class YCastInfos {
@@ -25,10 +29,23 @@ class YCastInfos {
     constructor(obj) {
         this.categories = [];
         if (obj != undefined) {
-            Object.keys(obj).forEach(k => {
-                console.log(k + "-  " + obj[k]);
-                this.categories.push(new RadioStationCategory(k, obj[k]));
-            });
+            let x = obj.getElementsByTagName("Item");
+            // let x = obj.getElementsByTagName("Title");
+            for (let i = 0; i < x.length; i++) {
+                // console.log(x[i]);
+                // console.log(x[i].childNodes[0].nodeValue);
+                let type = (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue);
+                let title = (x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue);
+                let url = (x[i].getElementsByTagName("UrlDir")[0].childNodes[0].nodeValue);
+                let urlbak = (x[i].getElementsByTagName("UrlDirBackUp")[0].childNodes[0].nodeValue);
+                let count = (x[i].getElementsByTagName("DirCount")[0].childNodes[0].nodeValue);
+                this.categories.push(new RadioStationCategory(type, title, url, urlbak, count));
+            }
+            // Object.keys(obj).forEach(k => {
+            // x.forEach(k => {
+            //     console.log(k + "-  " + obj[k]);
+            //     this.categories.push(new RadioStationCategory(k, obj[k]));
+            // });
         }
     }
 }
@@ -51,9 +68,10 @@ class App {
                         const parser = new DOMParser();
                         const xml = parser.parseFromString(data, "application/xml");
                         console.log(xml);
-                        let json = xml2json(xml);
-                        console.log(json);
-                        this.infos = new YCastInfos(json);
+                        // let json = xml2json(xml);
+                        // console.log(json);
+                        let xmlitems = xml.getElementsByTagName("ITEM");
+                        this.infos = new YCastInfos(xml);
                         console.log(this.infos);
                         resolve();
             }).catch((error) => {
@@ -74,14 +92,14 @@ class App {
                 li.innerHTML = cat._name;
                 if (cat.hasStations()) {
                     const toplist2 = document.createElement('ul');
-                    cat._stations.forEach(station => {
-                        console.log(station.name);
-                        const li2 = document.createElement('li');
-                        // li2.innerHTML = station.name;
-                        // li2.href = station._url;
-                        li2.innerHTML = "<a href='"+station._url+"'>"+station.name+"</a>"
-                        toplist2.appendChild(li2)
-                    })
+                    // cat._stations.forEach(station => {
+                    //     console.log(station.name);
+                    //     const li2 = document.createElement('li');
+                    //     // li2.innerHTML = station.name;
+                    //     // li2.href = station._url;
+                    //     li2.innerHTML = "<a href='"+station._url+"'>"+station.name+"</a>"
+                    //     toplist2.appendChild(li2)
+                    // })
                     li.appendChild(toplist2);
                 }
                 toplist.appendChild(li);

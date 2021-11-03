@@ -155,7 +155,8 @@ def admin(path):
     if 'js/xml2json.js' in path:
         return render_template("js/xml2json.js")
     if 'stations' in path:
-        return my_stations_landing()
+        return radiobrowser_landing()
+        #return my_stations_landing()
     if 'loginXML.asp' in path:
         return landing()
     logging.error("Unhandled upstream query (/setupapp/%s)", path)
