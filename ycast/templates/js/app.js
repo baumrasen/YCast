@@ -70,7 +70,7 @@ class App {
             this.infos.categories.forEach(cat => {
                 const li = document.createElement('li');
                 let j = 0;
-                li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Load</button>"
+                li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>"
                 li.id = cat._name
                 toplist.appendChild(li);
             });
@@ -81,43 +81,51 @@ class App {
 
 function loadXMLDoc(id, url) {
 
-    const promise = new Promise((resolve, reject) => {
+    let myButtonId = "Button" + id;
+    let myButton = document.getElementById(myButtonId);
 
-        fetch(url).then(response => response.text())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data, "application/xml");
-                        console.log(xml);
-                        
-                        const toplist = document.createElement('ul');
-                        
-                        let txt = "";
-                        x = xml.getElementsByTagName("Item");
-                        console.log(x);
-                        for (i = 0; i< x.length; i++) {
-                            if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Dir") {
-                                txt += x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue + "<br>";
-                                const li = document.createElement('li');
-                                li.innerHTML = x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue;
-                                toplist.appendChild(li)
-                            }
-                            if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Station") {
-                                txt += x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue + "<br>";
-                                const li = document.createElement('li');
-                                li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
-                                toplist.appendChild(li)
-                            }
+    if (myButton.innerHTML == 'Show') {
+        myButton.innerHTML = 'Hide'
+        const promise = new Promise((resolve, reject) => {
+
+            fetch(url).then(response => response.text())
+                        .then(data => {
+                            const parser = new DOMParser();
+                            const xml = parser.parseFromString(data, "application/xml");
+                            console.log(xml);
                             
-                        }
-                        document.getElementById(id).appendChild(toplist);
-                        resolve();
-            }).catch((error) => {
-                console.error(error);
-                reject(error);
+                            const toplist = document.createElement('ul');
+                            
+                            let txt = "";
+                            x = xml.getElementsByTagName("Item");
+                            console.log(x);
+                            for (i = 0; i< x.length; i++) {
+                                if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Dir") {
+                                    txt += x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue + "<br>";
+                                    const li = document.createElement('li');
+                                    li.innerHTML = x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue;
+                                    toplist.appendChild(li)
+                                }
+                                if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Station") {
+                                    txt += x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue + "<br>";
+                                    const li = document.createElement('li');
+                                    li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
+                                    toplist.appendChild(li)
+                                }
+                                
+                            }
+                            document.getElementById(id).appendChild(toplist);
+                            resolve();
+                }).catch((error) => {
+                    console.error(error);
+                    reject(error);
+                });
             });
-        });
-        return promise;
-    
+            return promise;
+    } else {
+        myButton.innerHTML = 'Show'
+        document.getElementById(id).removeChild(document.getElementById(id).lastChild)
+    }
 }
 
 var app;
