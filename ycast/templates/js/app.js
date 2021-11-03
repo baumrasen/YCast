@@ -39,35 +39,64 @@ class App {
 
     constructor(id) {
         this._id = id;
-        this.infos = undefined;
-        this.init().then(() => {
-            this.render();
+        this.infos1 = undefined;
+        this.init1().then(() => {
+            this.render1();
+        })
+        this.infos2 = undefined;
+        this.init2().then(() => {
+            this.render2();
         })
     }
 
-    init() {
+    init1() {
         const promise = new Promise((resolve, reject) => {
-            const url = window.origin + '/admin/stations';
-            console.log("url=" + url)
+            const url = window.origin + '/admin/my_stations';
+            console.log("url1=" + url)
             fetch(url).then(response => response.text())
                     .then(data => {
                         const parser = new DOMParser();
                         const xml = parser.parseFromString(data, "application/xml");
-                        this.infos = new YCastInfos(xml);
+                        this.infos1 = new YCastInfos(xml);
                         resolve();
+                        const url = window.origin + '/admin/index.html';
+
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+
+        });
+        return promise;
+    
+    }
+
+    init2() {
+        const promise = new Promise((resolve, reject) => {
+            const url = window.origin + '/admin/radiobrowser';
+            console.log("url2=" + url)
+            fetch(url).then(response => response.text())
+                    .then(data => {
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, "application/xml");
+                        this.infos2 = new YCastInfos(xml);
+                        resolve();
+                        const url = window.origin + '/admin/index.html';
+
             }).catch((error) => {
                 console.error(error);
                 reject(error);
             });
         });
         return promise;
+    
     }
 
-    render() {
+    render1() {
         const toplist = document.createElement('ul');
-        if (this.infos != undefined) {
+        if (this.infos1 != undefined) {
             let i = 0;
-            this.infos.categories.forEach(cat => {
+            this.infos1.categories.forEach(cat => {
                 const li = document.createElement('li');
                 let j = 0;
                 li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>"
@@ -75,9 +104,33 @@ class App {
                 toplist.appendChild(li);
             });
         }
+        const header = document.createElement('h1');
+        header.innerHTML = 'My_Stations';
+        document.getElementById(this._id).appendChild(header);
         document.getElementById(this._id).appendChild(toplist);
+        // document.getElementById(list1).appendChild(toplist);
+    }
+
+    render2() {
+        const toplist = document.createElement('ul');
+        if (this.infos2 != undefined) {
+            let i = 0;
+            this.infos2.categories.forEach(cat => {
+                const li = document.createElement('li');
+                let j = 0;
+                li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>"
+                li.id = cat._name
+                toplist.appendChild(li);
+            });
+        }
+        const header = document.createElement('h1');
+        header.innerHTML = 'Radiobrowser';
+        document.getElementById(this._id).appendChild(header);
+        document.getElementById(this._id).appendChild(toplist);
+        // document.getElementById(list2).appendChild(toplist);
     }
 }
+
 
 function loadXMLDoc(id, url) {
 
@@ -101,6 +154,7 @@ function loadXMLDoc(id, url) {
                             console.log(x);
                             for (i = 0; i< x.length; i++) {
                                 if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Dir") {
+                                    // YCastInfos(x[i]);
                                     txt += x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue + "<br>";
                                     const li = document.createElement('li');
                                     li.innerHTML = x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue;
