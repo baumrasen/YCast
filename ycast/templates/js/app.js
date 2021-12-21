@@ -92,7 +92,44 @@ class App {
     
     }
 
+    init_search() {
+        const promise = new Promise((resolve, reject) => {
+            const search_for = document.getElementById('id_search_input').value;
+            const url = window.origin + '/admin?search=' + search_for;
+            console.log("search_url=" + url)
+            fetch(url).then(response => response.text())
+                    .then(data => {
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, "application/xml");
+                        this.init_search = new YCastInfos(xml);
+                        resolve();
+                        const url = window.origin + '/admin/index.html';
+
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+
+        });
+        return promise;
+
+    }
+
     render1() {
+        const searchHeader = document.createElement('h1');
+        searchHeader.innerHTML = 'Search';
+
+        const search = document.createElement('form');
+        const search_input = document.createElement('input');
+        search_input.name = 'search_input';
+        search_input.id = 'id_search_input';
+
+        document.getElementById(this._id).appendChild(searchHeader);
+        document.getElementById(this._id).appendChild(search);
+        search.appendChild(search_input);
+
+        search.addEventListener('submit', updateValue);
+
         const toplist = document.createElement('ul');
         if (this.infos1 != undefined) {
             let i = 0;
@@ -131,7 +168,68 @@ class App {
         document.getElementById(this._id).appendChild(toplist);
         // document.getElementById(list2).appendChild(toplist);
     }
+
+    render_search() {
+        const toplist = document.createElement('ul');
+        if (this.info_search != undefined) {
+            let i = 0;
+            this.info_search.categories.forEach(cat => {
+                const li = document.createElement('li');
+                let j = 0;
+                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
+                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
+                li.id = cat._name;
+                toplist.appendChild(li);
+            });
+        }
+        const header = document.createElement('h1');
+        header.innerHTML = 'Search result';
+        document.getElementById(this._id).appendChild(header);
+        document.getElementById(this._id).appendChild(toplist);
+        // document.getElementById(list2).appendChild(toplist);
+    }
+
 }
+
+function updateValue(e) {
+  // log.textContent = e.target.value;
+  // console.log("search_value=" + e.target.value)
+  console.log("search_value=" + document.getElementById('id_search_input').value);
+
+        this.info_search = undefined;
+
+    const search_for = document.getElementById('id_search_input').value;
+            const url = window.origin + '/admin?search=' + search_for;
+            console.log("search_url=" + url)
+            fetch(url).then(response => response.text())
+                    .then(data => {
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, "application/xml");
+
+                        this.info_search = new YCastInfos(xml);
+                        resolve();
+                        const url = window.origin + '/admin/index.html';
+
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+
+    this.init_search().then(() => {
+                this.render_search();
+            })
+
+
+//    if (document.getElementById('id_search_input').value != '') {
+//            this.parent.info_search = undefined;
+//            this.parent.info_search().then(() => {
+//            this.parent.render_search();
+//        })
+//    }
+
+}
+
+
 
 function createShowHideButtonHTML(name, url, count) {
     return name + " (" + count + ") <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";

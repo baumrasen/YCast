@@ -133,7 +133,7 @@ def upstream(path):
         return my_stations_landing()
     if 'loginXML.asp' in path:
         return landing()
-    logging.error("Unhandled upstream query (/setupapp/%s)", path)
+    logging.error("Unhandled upstream query (/setupapp/%s) " + request.args, path)
     abort(404)
 
 @app.route('/admin/', defaults={'path': 'index.html'},
@@ -156,6 +156,8 @@ def admin(path):
         return my_stations_landing()
     if 'radiobrowser' in path:
         return radiobrowser_landing()
+    if 'search' in path:
+        return search_landing()
     logging.error("Unhandled upstream query (/admin/%s)", path)
     abort(404)
 
