@@ -25,17 +25,34 @@ class YCastInfos {
         if (obj != undefined) {
             let x = obj.getElementsByTagName("Item");
             for (let i = 0; i < x.length; i++) {
-                let type = (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue);
-                let title = (x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue);
-                let url = (x[i].getElementsByTagName("UrlDir")[0].childNodes[0].nodeValue);
-                let urlbak = (x[i].getElementsByTagName("UrlDirBackUp")[0].childNodes[0].nodeValue);
-                let count = (x[i].getElementsByTagName("DirCount")[0].childNodes[0].nodeValue);
+                // let type = (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue);
+                let type = getXmlChildNodeWithName(x[i], "ItemType");
+                // let title = (x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue);
+                let title = getXmlChildNodeWithName(x[i], "Title");
+                // let url = (x[i].getElementsByTagName("UrlDir")[0].childNodes[0].nodeValue);
+                let stationname = getXmlChildNodeWithName(x[i], "StationName");
+                // let url = (x[i].getElementsByTagName("UrlDir")[0].childNodes[0].nodeValue);
+                let url = getXmlChildNodeWithName(x[i], "UrlDir");
+                // let urlbak = (x[i].getElementsByTagName("UrlDirBackUp")[0].childNodes[0].nodeValue);
+                let urlbak = getXmlChildNodeWithName(x[i], "UrlDirBackUp");
+                // let count = (x[i].getElementsByTagName("DirCount")[0].childNodes[0].nodeValue);
+                let stationurl = getXmlChildNodeWithName(x[i], "StationUrl");
+                let count = getXmlChildNodeWithName(x[i], "DirCount");
+
+                if (title == '<Title>' && stationname != '<StationName>') {
+                    title = stationname;
+                }
+
+                if (url == '<UrlDir>' && stationurl != '<StationUrl>') {
+                    url = stationurl;
+                }
+
                 this.categories.push(new RadioStationCategory(type, title, url, urlbak, count));
             }
         }
     }
 }
-class App {
+class OldApp {
 
     constructor(id) {
         this._id = id;
@@ -191,6 +208,95 @@ class App {
 
 }
 
+class App {
+
+    constructor(id) {
+        this._id = id;
+        this.infos = undefined;
+        this.init().then(() => {
+            this.render();
+        })
+    }
+
+    init() {
+        const promise = new Promise((resolve, reject) => {
+            if (this._id == 'search') {
+                // const search_for = document.getElementById('id_search_input').value;
+                const search_for = 'hr3';
+                const url = window.origin + '/admin?search=' + search_for;
+                console.log("search_url=" + url)
+                fetch(url).then(response => response.text())
+                        .then(data => {
+                            const parser = new DOMParser();
+                            const xml = parser.parseFromString(data, "application/xml");
+                            this.infos = new YCastInfos(xml);
+                            resolve();
+                            const url = window.origin + '/admin/index.html';
+
+                }).catch((error) => {
+                    console.error(error);
+                    reject(error);
+                });
+            } else {
+                const url = window.origin + '/admin/' + this._id;
+                console.log("url1=" + url)
+                fetch(url).then(response => response.text())
+                        .then(data => {
+                            const parser = new DOMParser();
+                            const xml = parser.parseFromString(data, "application/xml");
+                            this.infos = new YCastInfos(xml);
+                            resolve();
+                            const url = window.origin + '/admin/index.html';
+
+                }).catch((error) => {
+                    console.error(error);
+                    reject(error);
+                });
+            }
+        });
+        return promise;
+    }
+
+    render() {
+        if (this._id == 'search') {
+            const searchHeader = document.createElement('h1');
+            searchHeader.innerHTML = 'Search';
+
+            const search = document.createElement('form');
+            const search_input = document.createElement('input');
+            search_input.name = 'search_input';
+            search_input.id = 'id_search_input';
+            search_input.value = 'hr3';
+
+            document.getElementById(this._id).appendChild(searchHeader);
+            document.getElementById(this._id).appendChild(search);
+            search.appendChild(search_input);
+
+            search.addEventListener('submit', updateValue);
+
+        }
+
+        const toplist = document.createElement('ul');
+        if (this.infos != undefined) {
+            let i = 0;
+            this.infos.categories.forEach(cat => {
+                const li = document.createElement('li');
+                let j = 0;
+                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
+                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
+                li.id = cat._name;
+                toplist.appendChild(li);
+            });
+        }
+        const header = document.createElement('h1');
+        header.innerHTML = this._id;
+        document.getElementById(this._id).appendChild(header);
+        document.getElementById(this._id).appendChild(toplist);
+        // document.getElementById(list1).appendChild(toplist);
+    }
+
+}
+
 function updateValue(e) {
   // log.textContent = e.target.value;
   // console.log("search_value=" + e.target.value)
@@ -229,8 +335,6 @@ function updateValue(e) {
 
 }
 
-
-
 function createShowHideButtonHTML(name, url, count) {
     return name + " (" + count + ") <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";
     // return "<a href='"+url+"'>"+name+" (" + count + ") </a> <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";
@@ -238,15 +342,15 @@ function createShowHideButtonHTML(name, url, count) {
 
 function createStationHTML(x) {
     
-    let name = getSationInfo(x, "StationName");
-    let stationId = getSationInfo(x, "StationId");
-    // let url = getSationInfo(x[i], "StationUrl");
-    // let descr = getSationInfo(x[i], "StationDescr");
-    // let logo = getSationInfo(x[i], "Logo");
-    // let format = getSationInfo(x[i], "StationFormat");
-    let mime = getSationInfo(x, "StationMime");
-    // let bookmark = getSationInfo(x[i], "Bookmark");
-    let bandwidth = getSationInfo(x, "StationBandWidth");
+    let name = getXmlChildNodeWithName(x, "StationName");
+    let stationId = getXmlChildNodeWithName(x, "StationId");
+    // let url = getXmlChildNodeWithName(x[i], "StationUrl");
+    // let descr = getXmlChildNodeWithName(x[i], "StationDescr");
+    // let logo = getXmlChildNodeWithName(x[i], "Logo");
+    // let format = getXmlChildNodeWithName(x[i], "StationFormat");
+    let mime = getXmlChildNodeWithName(x, "StationMime");
+    // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
+    let bandwidth = getXmlChildNodeWithName(x, "StationBandWidth");
 
     return name + " (" + mime + " " + bandwidth + ") <button id='" + getButtonIdName(stationId) + "' type='button'>Show</button>";
     // return name + " (" + mime + " " + bandwidth + ") <button id='Button" + stationId + "' type='button' onclick='showStationInfoHTML(\"" + x + "\")'>Show</button>";
@@ -255,20 +359,21 @@ function createStationHTML(x) {
 
 function createAudioControlHTML(x) {
     
-    let name = getSationInfo(x, "StationName");
-    let stationId = getSationInfo(x, "StationId");
-    let url = getSationInfo(x, "StationUrl");
-    // let descr = getSationInfo(x[i], "StationDescr");
-    // let logo = getSationInfo(x[i], "Logo");
-    // let format = getSationInfo(x[i], "StationFormat");
-    let mime = getSationInfo(x, "StationMime");
-    // let bookmark = getSationInfo(x[i], "Bookmark");
-    let bandwidth = getSationInfo(x, "StationBandWidth");
+    let name = getXmlChildNodeWithName(x, "StationName");
+    let stationId = getXmlChildNodeWithName(x, "StationId");
+    let url = getXmlChildNodeWithName(x, "StationUrl");
+    // let descr = getXmlChildNodeWithName(x[i], "StationDescr");
+    // let logo = getXmlChildNodeWithName(x[i], "Logo");
+    // let format = getXmlChildNodeWithName(x[i], "StationFormat");
+    let mime = getXmlChildNodeWithName(x, "StationMime");
+    // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
+    let bandwidth = getXmlChildNodeWithName(x, "StationBandWidth");
 
     return name + " (" + bandwidth + ", " + mime + ") <audio controls> <source src='" + url + "' type='audio/mpeg'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
 }
-
-function getSationInfo(x, name) {
+// getXmlChildNodeWithName
+function getXmlChildNodeWithName(x, name) {
+    // (x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue)
     let value = "<" + name + ">";
     try {
         value = x.getElementsByTagName(name)[0].childNodes[0].nodeValue;
@@ -322,18 +427,18 @@ function loadXMLDoc(id, url) {
                                     const li = document.createElement('li');
                                     // li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
 
-                                    // let name = getSationInfo(x[i], "StationName");
-                                    // let stationId = getSationInfo(x[i], "StationId");
-                                    // let url = getSationInfo(x[i], "StationUrl");
-                                    // let descr = getSationInfo(x[i], "StationDescr");
-                                    // let logo = getSationInfo(x[i], "Logo");
-                                    // let format = getSationInfo(x[i], "StationFormat");
-                                    // let mime = getSationInfo(x[i], "StationMime");
-                                    // let bookmark = getSationInfo(x[i], "Bookmark");
-                                    // let bandwidth = getSationInfo(x[i], "StationBandWidth");
+                                    // let name = getXmlChildNodeWithName(x[i], "StationName");
+                                    // let stationId = getXmlChildNodeWithName(x[i], "StationId");
+                                    // let url = getXmlChildNodeWithName(x[i], "StationUrl");
+                                    // let descr = getXmlChildNodeWithName(x[i], "StationDescr");
+                                    // let logo = getXmlChildNodeWithName(x[i], "Logo");
+                                    // let format = getXmlChildNodeWithName(x[i], "StationFormat");
+                                    // let mime = getXmlChildNodeWithName(x[i], "StationMime");
+                                    // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
+                                    // let bandwidth = getXmlChildNodeWithName(x[i], "StationBandWidth");
 
                                     li.innerHTML = createStationHTML(x[i]);
-                                    let stationId = getSationInfo(x[i], "StationId");
+                                    let stationId = getXmlChildNodeWithName(x[i], "StationId");
                                     li.id = stationId;
 
                                     // let myButton = getButtonWithId(stationId);
@@ -372,7 +477,7 @@ function getButtonIdName(bId) {
 
 function showStationInfoHTML(x) {
     return function() {
-        let stationId = getSationInfo(x, "StationId");
+        let stationId = getXmlChildNodeWithName(x, "StationId");
 
         // let myButtonId = "Button" + stationId;
         // let myButton = document.getElementById(myButtonId);
@@ -395,7 +500,7 @@ function showStationInfoHTML(x) {
                 const li = document.createElement('li');
                 // li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
         
-                let current = getSationInfo(x, element);
+                let current = getXmlChildNodeWithName(x, element);
 
                 if (element == "StationName") {
                     TempStationName = current;
@@ -424,5 +529,7 @@ function showStationInfoHTML(x) {
 
 var app;
 document.addEventListener("DOMContentLoaded", (event) => {
-    app = new App("app");
+    my_stations = new App("my_stations");
+    radiobrowser = new App("radiobrowser");
+    search = new App("search");
 });
