@@ -69,7 +69,7 @@ class App {
         const promise = new Promise((resolve, reject) => {
             if (this._id == 'search') {
                 // const search_for = document.getElementById('id_search_input').value;
-                const search_for = 'hr3';
+                const search_for = '';
                 const url = window.origin + '/admin?search=' + search_for;
                 console.log("search_url=" + url)
                 fetch(url).then(response => response.text())
@@ -107,24 +107,55 @@ class App {
     render() {
         if (this._id == 'search') {
             const searchHeader = document.createElement('h1');
-            searchHeader.innerHTML = 'Search';
+            searchHeader.innerHTML = 'search';
+            document.getElementById(this._id).appendChild(searchHeader);
 
-            const search = document.createElement('form');
+            const search_form = document.createElement('form');
             const search_input = document.createElement('input');
+            search_input.type = 'text';
             search_input.name = 'search_input';
             search_input.id = 'id_search_input';
-            search_input.value = 'hr3';
 
-            document.getElementById(this._id).appendChild(searchHeader);
-            document.getElementById(this._id).appendChild(search);
-            search.appendChild(search_input);
+            document.getElementById(this._id).appendChild(search_form);
+            search_form.appendChild(search_input);
 
-            search.addEventListener('submit', updateValue);
+            const search_button = document.createElement('button');
+            search_button.name = 'search_button';
+            search_button.id = 'search_button';
+            search_button.type = 'button';
+            search_button.innerHTML = 'Search now';
+            search_form.appendChild(search_button);
+
+
+//            return name + " (" + count + ") <button id='" + getButtonIdName(name, app_id) + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>Show</button>";
+//            search.onclick = loadXMLDoc
+
+            const search_for = "";
+            const url = window.origin + '/admin?search=' + search_for;
+            // search_form.addEventListener('submit', loadXMLDoc(this._id, url, this._id));
+            // search_button.addEventListener('click', loadXMLDoc(this._id, url, this._id));
+            search_button.onclick = function() {
+                loadXMLDoc('search', url, 'search');
+                };
+
+//            search_form.onsubmit = function() {
+//                // loadXMLDoc('search', url, 'search');
+//                console.log('submit will not work');
+//                };
+            search_form.addEventListener('submit', handleFormSubmit)
+
+            search_input.onsubmit = function() {
+                loadXMLDoc('search', url, 'search');
+                };
+
+            // search.innerHTML = createSubmitSearchButtonHTML(this._id)
+
+        } else {
+            const header = document.createElement('h1');
+            header.innerHTML = this._id;
+            document.getElementById(this._id).appendChild(header);
         }
 
-        const header = document.createElement('h1');
-        header.innerHTML = this._id;
-        document.getElementById(this._id).appendChild(header);
         const toplist = document.createElement('ul');
         document.getElementById(this._id).appendChild(toplist);
         // document.getElementById(list1).appendChild(toplist);
@@ -149,38 +180,25 @@ class App {
 
 }
 
-function updateValue(e) {
-  // log.textContent = e.target.value;
-  // console.log("search_value=" + e.target.value)
-  console.log("search_value=" + document.getElementById('id_search_input').value);
-
-        this.info_search = undefined;
-
-    const search_for = document.getElementById('id_search_input').value;
-            const url = window.origin + '/admin?search=' + search_for;
-            console.log("search_url=" + url)
-            fetch(url).then(response => response.text())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data, "application/xml");
-
-                        this.info_search = new YCastInfos(xml);
-                        resolve();
-                        const url = window.origin + '/admin/index.html';
-
-            }).catch((error) => {
-                console.error(error);
-                reject(error);
-            });
-
-    this.init_search().then(() => {
-                this.render_search();
-            })
-
+function handleFormSubmit(e) {
+    e.preventDefault(); // Otherwise the form will be submitted
+    console.log('submit will do nothing');
 }
 
 function createShowHideButtonHTML(name, url, count, app_id) {
     return name + " (" + count + ") <button id='" + getButtonIdName(name, app_id) + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>Show</button>";
+}
+
+// function createSubmitSearchButtonHTML(name, url, count, app_id) {
+function createSubmitSearchButtonHTML(app_id) {
+    // return name + " (" + count + ") <button id='" + getButtonIdName(name, app_id) + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>search now</button>";
+    let str = "";
+    str += "<input type='text' id='id_search_input' name='search'/>";
+    // str += "<button id='search-submit' type='submit'>Search now</button>";
+    const search_for = "";
+    const url = window.origin + '/admin?search=' + search_for;
+    str += "<button id='search-submit' type='button' onclick='loadXMLDoc(\"" + app_id + "\", \"" + url + "\", \"" + app_id + "\")'>Search now</button>";
+    return str;
 }
 
 function createStationHTML(x, app_id) {
@@ -214,27 +232,41 @@ function createAudioControlHTML(x) {
 
     return name + " (" + bandwidth + ", " + mime + ") <audio controls> <source src='" + url + "' type='audio/mpeg'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
 }
-// getXmlChildNodeWithName
+
 function getXmlChildNodeWithName(x, name) {
     // (x[i].getElementsByTagName("Title")[0].childNodes[0].nodeValue)
     let value = "<" + name + ">";
     try {
         value = x.getElementsByTagName(name)[0].childNodes[0].nodeValue;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
     return value;
 }
 
 function loadXMLDoc(id, url, app_id) {
 
-    // let myButtonId = getButtonIdName(id, app_id);
-    // let myButton = document.getElementById(myButtonId);
     let myButton = getButtonWithId(id, app_id);
 
+    if (app_id == "search") {
+        // myButton = getButtonWithId("search-submit", app_id)
+        myButton = document.getElementById("search_button");
+        // document.getElementById(id).removeChild;
 
-    if (myButton.innerHTML == 'Show') {
-        myButton.innerHTML = 'Hide'
+        var lis = document.getElementById(id).querySelectorAll('li');
+        for(var i=0; li=lis[i]; i++) {
+            li.parentNode.removeChild(li);
+        }
+
+        const search_for = document.getElementById('id_search_input').value;
+        url = window.origin + '/admin?search=' + search_for;
+    }
+
+    if (myButton.innerHTML == 'Show' || myButton.innerHTML == 'Search now') {
+        if (myButton.innerHTML == 'Show') {
+            myButton.innerHTML = 'Hide';
+        }
+        console.log("current url=" + url);
         const promise = new Promise((resolve, reject) => {
 
             fetch(url).then(response => response.text())
