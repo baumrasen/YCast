@@ -7,12 +7,13 @@ class RadioStation {
 }
 class RadioStationCategory {
 
-    constructor(type, name, url, urlbak, count) {
+    constructor(type, name, url, urlbak, count, xml) {
         this._type = type;
         this._name = name;
         this._url = url;
         this._urlbak = urlbak;
         this._count = count;
+        this._xml = xml;
     }
     hasStations() {
         return this._count > 0;
@@ -47,166 +48,12 @@ class YCastInfos {
                     url = stationurl;
                 }
 
-                this.categories.push(new RadioStationCategory(type, title, url, urlbak, count));
+                this.categories.push(new RadioStationCategory(type, title, url, urlbak, count, x[i]));
             }
         }
     }
 }
-class OldApp {
 
-    constructor(id) {
-        this._id = id;
-        this.infos1 = undefined;
-        this.init1().then(() => {
-            this.render1();
-        })
-        this.infos2 = undefined;
-        this.init2().then(() => {
-            this.render2();
-        })
-    }
-
-    init1() {
-        const promise = new Promise((resolve, reject) => {
-            const url = window.origin + '/admin/my_stations';
-            console.log("url1=" + url)
-            fetch(url).then(response => response.text())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data, "application/xml");
-                        this.infos1 = new YCastInfos(xml);
-                        resolve();
-                        const url = window.origin + '/admin/index.html';
-
-            }).catch((error) => {
-                console.error(error);
-                reject(error);
-            });
-
-        });
-        return promise;
-    
-    }
-
-    init2() {
-        const promise = new Promise((resolve, reject) => {
-            const url = window.origin + '/admin/radiobrowser';
-            console.log("url2=" + url)
-            fetch(url).then(response => response.text())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data, "application/xml");
-                        this.infos2 = new YCastInfos(xml);
-                        resolve();
-                        const url = window.origin + '/admin/index.html';
-
-            }).catch((error) => {
-                console.error(error);
-                reject(error);
-            });
-        });
-        return promise;
-    
-    }
-
-    init_search() {
-        const promise = new Promise((resolve, reject) => {
-            const search_for = document.getElementById('id_search_input').value;
-            const url = window.origin + '/admin?search=' + search_for;
-            console.log("search_url=" + url)
-            fetch(url).then(response => response.text())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data, "application/xml");
-                        this.init_search = new YCastInfos(xml);
-                        resolve();
-                        const url = window.origin + '/admin/index.html';
-
-            }).catch((error) => {
-                console.error(error);
-                reject(error);
-            });
-
-        });
-        return promise;
-
-    }
-
-    render1() {
-        const searchHeader = document.createElement('h1');
-        searchHeader.innerHTML = 'Search';
-
-        const search = document.createElement('form');
-        const search_input = document.createElement('input');
-        search_input.name = 'search_input';
-        search_input.id = 'id_search_input';
-
-        document.getElementById(this._id).appendChild(searchHeader);
-        document.getElementById(this._id).appendChild(search);
-        search.appendChild(search_input);
-
-        search.addEventListener('submit', updateValue);
-
-        const toplist = document.createElement('ul');
-        if (this.infos1 != undefined) {
-            let i = 0;
-            this.infos1.categories.forEach(cat => {
-                const li = document.createElement('li');
-                let j = 0;
-                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
-                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
-                li.id = cat._name;
-                toplist.appendChild(li);
-            });
-        }
-        const header = document.createElement('h1');
-        header.innerHTML = 'My_Stations';
-        document.getElementById(this._id).appendChild(header);
-        document.getElementById(this._id).appendChild(toplist);
-        // document.getElementById(list1).appendChild(toplist);
-    }
-
-    render2() {
-        const toplist = document.createElement('ul');
-        if (this.infos2 != undefined) {
-            let i = 0;
-            this.infos2.categories.forEach(cat => {
-                const li = document.createElement('li');
-                let j = 0;
-                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
-                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
-                li.id = cat._name;
-                toplist.appendChild(li);
-            });
-        }
-        const header = document.createElement('h1');
-        header.innerHTML = 'Radiobrowser';
-        document.getElementById(this._id).appendChild(header);
-        document.getElementById(this._id).appendChild(toplist);
-        // document.getElementById(list2).appendChild(toplist);
-    }
-
-    render_search() {
-        const toplist = document.createElement('ul');
-        if (this.info_search != undefined) {
-            let i = 0;
-            this.info_search.categories.forEach(cat => {
-                const li = document.createElement('li');
-                let j = 0;
-                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
-                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
-                li.id = cat._name;
-                toplist.appendChild(li);
-            });
-        }
-        const header = document.createElement('h1');
-        header.innerHTML = 'Search result';
-        document.getElementById(this._id).appendChild(header);
-        document.getElementById(this._id).appendChild(toplist);
-        // document.getElementById(list2).appendChild(toplist);
-    }
-
-}
 
 class App {
 
@@ -273,26 +120,31 @@ class App {
             search.appendChild(search_input);
 
             search.addEventListener('submit', updateValue);
-
         }
 
-        const toplist = document.createElement('ul');
-        if (this.infos != undefined) {
-            let i = 0;
-            this.infos.categories.forEach(cat => {
-                const li = document.createElement('li');
-                let j = 0;
-                // li.innerHTML = "<a href='"+cat._url+"'>"+cat._name+" (" + cat._count + ") </a> <button id='Button" + cat._name + "' type='button' onclick='loadXMLDoc(\"" + cat._name + "\", \"" + cat._url + "\")'>Show</button>";
-                li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
-                li.id = cat._name;
-                toplist.appendChild(li);
-            });
-        }
         const header = document.createElement('h1');
         header.innerHTML = this._id;
         document.getElementById(this._id).appendChild(header);
+        const toplist = document.createElement('ul');
         document.getElementById(this._id).appendChild(toplist);
         // document.getElementById(list1).appendChild(toplist);
+
+        if (this.infos != undefined) {
+            let i = 0;
+            this.infos.categories.forEach(cat => {
+                let j = 0;
+                if (this._id == 'search') {
+                    // li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count)
+                    // li.id = cat._name;
+                    getStationHTML(cat._xml, toplist, this._id)
+                } else {
+                    const li = document.createElement('li');
+                    li.innerHTML = createShowHideButtonHTML(cat._name, cat._url, cat._count, this._id)
+                    li.id = cat._name;
+                    toplist.appendChild(li);
+                }
+            });
+        }
     }
 
 }
@@ -325,22 +177,13 @@ function updateValue(e) {
                 this.render_search();
             })
 
-
-//    if (document.getElementById('id_search_input').value != '') {
-//            this.parent.info_search = undefined;
-//            this.parent.info_search().then(() => {
-//            this.parent.render_search();
-//        })
-//    }
-
 }
 
-function createShowHideButtonHTML(name, url, count) {
-    return name + " (" + count + ") <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";
-    // return "<a href='"+url+"'>"+name+" (" + count + ") </a> <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";
+function createShowHideButtonHTML(name, url, count, app_id) {
+    return name + " (" + count + ") <button id='" + getButtonIdName(name, app_id) + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>Show</button>";
 }
 
-function createStationHTML(x) {
+function createStationHTML(x, app_id) {
     
     let name = getXmlChildNodeWithName(x, "StationName");
     let stationId = getXmlChildNodeWithName(x, "StationId");
@@ -352,7 +195,7 @@ function createStationHTML(x) {
     // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
     let bandwidth = getXmlChildNodeWithName(x, "StationBandWidth");
 
-    return name + " (" + mime + " " + bandwidth + ") <button id='" + getButtonIdName(stationId) + "' type='button'>Show</button>";
+    return name + " (" + mime + " " + bandwidth + ") <button id='" + getButtonIdName(stationId, app_id) + "' type='button'>Show</button>";
     // return name + " (" + mime + " " + bandwidth + ") <button id='Button" + stationId + "' type='button' onclick='showStationInfoHTML(\"" + x + "\")'>Show</button>";
     // return name + " (" + bandwidth + ", " + mime + ") <audio controls> <source src='" + url + "' type='audio/mpeg'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
 }
@@ -383,10 +226,11 @@ function getXmlChildNodeWithName(x, name) {
     return value;
 }
 
-function loadXMLDoc(id, url) {
+function loadXMLDoc(id, url, app_id) {
 
-    let myButtonId = getButtonIdName(id);
-    let myButton = document.getElementById(myButtonId);
+    // let myButtonId = getButtonIdName(id, app_id);
+    // let myButton = document.getElementById(myButtonId);
+    let myButton = getButtonWithId(id, app_id);
 
 
     if (myButton.innerHTML == 'Show') {
@@ -416,7 +260,7 @@ function loadXMLDoc(id, url) {
                                     let count = x[i].getElementsByTagName("DirCount")[0].childNodes[0].nodeValue;
 
                                     // li.innerHTML = "<a href='"+url+"'>"+name+" (" + count + ") </a> <button id='Button" + name + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\")'>Show</button>";
-                                    li.innerHTML = createShowHideButtonHTML(name, url, count)
+                                    li.innerHTML = createShowHideButtonHTML(name, url, count, app_id)
                                     li.id = name;
                                     
 
@@ -424,7 +268,7 @@ function loadXMLDoc(id, url) {
                                 }
                                 if (x[i].getElementsByTagName("ItemType")[0].childNodes[0].nodeValue == "Station") {
                                     // txt += x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue + "<br>";
-                                    const li = document.createElement('li');
+                                    // const li = document.createElement('li');
                                     // li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
 
                                     // let name = getXmlChildNodeWithName(x[i], "StationName");
@@ -437,16 +281,19 @@ function loadXMLDoc(id, url) {
                                     // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
                                     // let bandwidth = getXmlChildNodeWithName(x[i], "StationBandWidth");
 
-                                    li.innerHTML = createStationHTML(x[i]);
-                                    let stationId = getXmlChildNodeWithName(x[i], "StationId");
-                                    li.id = stationId;
+//                                    const li = document.createElement('li');
+//                                    li.innerHTML = createStationHTML(x[i]);
+//                                    let stationId = getXmlChildNodeWithName(x[i], "StationId");
+//                                    li.id = stationId;
+//
+//                                    // let myButton = getButtonWithId(stationId);
+//
+//                                    toplist.appendChild(li);
+//                                    let myButtonId = getButtonIdName(stationId);
+//                                    let myButton = document.getElementById(myButtonId);
+//                                    myButton.addEventListener("click", showStationInfoHTML(x[i], app_id));
 
-                                    // let myButton = getButtonWithId(stationId);
-
-                                    toplist.appendChild(li);
-                                    let myButtonId = getButtonIdName(stationId);
-                                    let myButton = document.getElementById(myButtonId);
-                                    myButton.addEventListener("click", showStationInfoHTML(x[i]));
+                                    getStationHTML(x[i], toplist, app_id)
                                 }
                                 
                             }
@@ -464,18 +311,45 @@ function loadXMLDoc(id, url) {
     }
 }
 
-function getButtonWithId(buttonId) {
-    let myButtonId = getButtonIdName(buttonId);
+function getStationHTML(xml, toplist, app_id) {
+    const li = document.createElement('li');
+    // li.innerHTML = x[i].getElementsByTagName("StationName")[0].childNodes[0].nodeValue;
+
+    // let name = getXmlChildNodeWithName(x[i], "StationName");
+    // let stationId = getXmlChildNodeWithName(x[i], "StationId");
+    // let url = getXmlChildNodeWithName(x[i], "StationUrl");
+    // let descr = getXmlChildNodeWithName(x[i], "StationDescr");
+    // let logo = getXmlChildNodeWithName(x[i], "Logo");
+    // let format = getXmlChildNodeWithName(x[i], "StationFormat");
+    // let mime = getXmlChildNodeWithName(x[i], "StationMime");
+    // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
+    // let bandwidth = getXmlChildNodeWithName(x[i], "StationBandWidth");
+
+    li.innerHTML = createStationHTML(xml, app_id);
+    let stationId = getXmlChildNodeWithName(xml, "StationId");
+    li.id = stationId;
+
+    // let myButton = getButtonWithId(stationId);
+
+    toplist.appendChild(li);
+    // let myButtonId = getButtonIdName(stationId, app_id);
+    // let myButton = document.getElementById(myButtonId);
+    let myButton = getButtonWithId(stationId, app_id);
+    myButton.addEventListener("click", showStationInfoHTML(xml, app_id));
+}
+
+function getButtonWithId(buttonId, app_id) {
+    let myButtonId = getButtonIdName(buttonId, app_id);
     let myButton = document.getElementById(myButtonId);
     return myButton;
 }
 
-function getButtonIdName(bId) {
-    return "Button" + bId;
+function getButtonIdName(bId, app_id) {
+    return app_id + bId;
 
 }
 
-function showStationInfoHTML(x) {
+function showStationInfoHTML(x, app_id) {
     return function() {
         let stationId = getXmlChildNodeWithName(x, "StationId");
 
@@ -484,8 +358,10 @@ function showStationInfoHTML(x) {
         
         // let myButton = getButtonWithId(stationId);
 
-        let myButtonId = getButtonIdName(stationId);
-        let myButton = document.getElementById(myButtonId);
+        // let myButtonId = getButtonIdName(stationId, app_id);
+        // let myButton = document.getElementById(myButtonId);
+
+        let myButton = getButtonWithId(stationId, app_id);
     
         if (myButton.innerHTML == 'Show') {
             myButton.innerHTML = 'Hide'
