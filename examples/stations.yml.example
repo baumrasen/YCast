@@ -14,8 +14,16 @@ Chillout:
 
 Casual:
   76Radio: http://192.240.102.133:9566/stream
-  SomaFM Beat Blender: http://ice1.somafm.com/beatblender-128-mp3
-  Jazz Radio Electro Swing: http://jazz-wr04.ice.infomaniak.ch/jazz-wr04-128.mp3
+  SomaFM Beat Blender:
+    url: http://ice1.somafm.com/beatblender-128-mp3
+    id: 960eb232-0601-11e8-ae97-52543be04c81
+    icon: https://somafm.com/img3/beatblender-400.jpg
+    description: some description
+    genre: chillout
+    mime: MP3
+    bitrate: 128
+  Jazz Radio Electro Swing:
+    url: http://jazz-wr04.ice.infomaniak.ch/jazz-wr04-128.mp3
   SomaFM Groove Salad: http://ice1.somafm.com/groovesalad-256-mp3
   SomaFM Lush: http://ice1.somafm.com/lush-128-mp3
   Allzic Radio R&B: http://allzic10.ice.infomaniak.ch/allzic10.mp3
