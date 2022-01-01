@@ -186,7 +186,10 @@ function handleFormSubmit(e) {
 }
 
 function createShowHideButtonHTML(name, url, count, app_id) {
-    return name + " (" + count + ") <button id='" + getButtonIdName(name, app_id) + "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>Show</button>";
+    return name +
+            " (" + count +
+            ") <button id='" + getButtonIdName(name, app_id) +
+            "' type='button' onclick='loadXMLDoc(\"" + name + "\", \"" + url + "\", \"" + app_id + "\")'>Show</button>";
 }
 
 // function createSubmitSearchButtonHTML(name, url, count, app_id) {
@@ -427,7 +430,21 @@ function showStationInfoHTML(x, app_id) {
             player.innerHTML = createAudioControlHTML(x);
     
             toplist.appendChild(player)
-    
+
+            const div_bookmark = document.createElement('div');
+            toplist.appendChild(div_bookmark);
+
+            const cb_bookmark = document.createElement('input');
+            cb_bookmark.type = 'checkbox';
+            cb_bookmark.id = 'bmcb_' + stationId;
+            div_bookmark.appendChild(cb_bookmark);
+
+            const l_bookmark = document.createElement('label');
+            l_bookmark.innerHTML = "Bookmark";
+            div_bookmark.appendChild(l_bookmark);
+
+
+
         } else {
             myButton.innerHTML = 'Show'
             document.getElementById(stationId).removeChild(document.getElementById(stationId).lastChild)
