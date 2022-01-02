@@ -41,5 +41,7 @@ setup(
         'denon'
     ],
     install_requires=['requests', 'flask', 'PyYAML', 'Pillow'],
-    packages=find_packages(exclude=['contrib', 'docs', 'tests'])
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    include_package_data=True,
+    zip_safe=False
 )
