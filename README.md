@@ -1,14 +1,20 @@
 <img src="https://image.ibb.co/iBY6hq/yamaha.png" width="600">
 
-# YCast
+# YCast (advanced)
 
 [![PyPI latest version](https://img.shields.io/pypi/v/ycast?color=success)](https://pypi.org/project/ycast/) [![GitHub latest version](https://img.shields.io/github/v/release/milaq/YCast?color=success&label=github&sort=semver)](https://github.com/milaq/YCast/releases) [![Python version](https://img.shields.io/pypi/pyversions/ycast)](https://www.python.org/downloads/) [![License](https://img.shields.io/pypi/l/ycast)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub issues](https://img.shields.io/github/issues/milaq/ycast)](https://github.com/milaq/YCast/issues)
 
-[Get it via PyPI](https://pypi.org/project/ycast/)
+[Download from GitHub](https://github.com/THanika/YCast/releases)
 
-[Download from GitHub](https://github.com/milaq/YCast/releases)
+[Issue tracker](https://github.com/THanika/YCast/issues)
 
-[Issue tracker](https://github.com/milaq/YCast/issues)
+#### pip3 install git+https://github.com/ThHanika/YCast
+
+### The advanced feature:
+* Icons in my favorites list 'stations.yml' (the icon URL can be appended after the pipe character '|')
+* recently visited radio stations are stored in /.yast/resently.yml (compatible with stations.yml, for easy editing of your favorites and pasting into stations.yml)
+* global filter configurable file ./ycast/filter.yml (with this you can globally reduce the radio stations according to your interests)
+* 5 frequently used radio stations can be selected on the target page (self-learning algorithm based on frequency of station selection)
 
 YCast is a self hosted replacement for the vTuner internet radio service which many AVRs use.
 It emulates a vTuner backend to provide your AVR with the necessary information to play self defined categorized internet radio stations and listen to Radio stations listed in the [Community Radio Browser index](http://www.radio-browser.info).
@@ -117,7 +123,7 @@ You can redirect all traffic destined for the original request URL (e.g. `radioy
 __Attention__: Do not rewrite the requests transparently. YCast expects the complete URL (i.e. including `/ycast` or `/setupapp`). It also need an intact `Host` header; so if you're proxying YCast you need to pass the original header on. For Nginx, this can be accomplished with `proxy_set_header Host $host;`.
 
 In case you are using (or plan on using) Nginx to proxy requests, have a look at [this example](examples/nginx-ycast.conf.example).
-This can be used together with [this systemd service example](examples/ycast.service.example) for a fully functional deployment.
+This can be used together with [this systemd service example](examples/ycast.service.example_ycast) for a fully functional deployment.
 
 #### With WSGI
 
