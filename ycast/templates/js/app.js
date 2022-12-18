@@ -221,6 +221,47 @@ function createStationHTML(x, app_id) {
     // return name + " (" + bandwidth + ", " + mime + ") <audio controls> <source src='" + url + "' type='audio/mpeg'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
 }
 
+function createAudioControlElement(x) {
+
+    let name = getXmlChildNodeWithName(x, "StationName");
+    let stationId = getXmlChildNodeWithName(x, "StationId");
+    let url = getXmlChildNodeWithName(x, "StationUrl");
+    // let descr = getXmlChildNodeWithName(x[i], "StationDescr");
+    // let logo = getXmlChildNodeWithName(x[i], "Logo");
+    // let format = getXmlChildNodeWithName(x[i], "StationFormat");
+    let mime = getXmlChildNodeWithName(x, "StationMime");
+    // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
+    let bandwidth = getXmlChildNodeWithName(x, "StationBandWidth");
+    let type = 'audio/mpeg';
+
+    if (url.includes(".m3u")) {
+        type = 'audio/mpegURL';
+    }
+
+    if (mime == "AAC") {
+        type = 'audio/mpeg';
+    }
+
+    let supportsMp3 = false;
+    let myAudio = document.createElement('audio');
+    // myAudio.src = url;
+    // myAudio.src.type = type;
+    myAudio.controls = true;
+    myAudio.autoplay = true;
+    myAudio.innerHTML = "Leider kann Ihr Browser kein HTML5-Audio abspielen";
+    let myAudioSrc = document.createElement('source');
+    myAudioSrc.src = url;
+    myAudioSrc.type = type;
+    myAudio.appendChild(myAudioSrc);
+
+
+    if (myAudio.canPlayType('audio/mpeg') !== ""){
+        supportsMp3 = true;
+    }
+
+    return myAudio;
+}
+
 function createAudioControlHTML(x) {
     
     let name = getXmlChildNodeWithName(x, "StationName");
@@ -232,8 +273,27 @@ function createAudioControlHTML(x) {
     let mime = getXmlChildNodeWithName(x, "StationMime");
     // let bookmark = getXmlChildNodeWithName(x[i], "Bookmark");
     let bandwidth = getXmlChildNodeWithName(x, "StationBandWidth");
+    let type = 'audio/mpeg';
+    if (url.includes(".m3u")) {
+        type = 'audio/mpegURL';
+    }
 
-    return name + " (" + bandwidth + ", " + mime + ") <audio controls> <source src='" + url + "' type='audio/mpeg'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
+    var supportsMp3 = false;
+    var myAudio = document.createElement('audio');
+    if (myAudio.canPlayType('audio/mpeg') !== ""){
+        supportsMp3 = true;
+    }
+
+    return name +
+            " (" +
+            bandwidth +
+            ", " + mime +
+            ") <audio controls> " +
+            "<source src='" +
+            url +
+            "' type='" +
+            type +
+            "'> Leider kann Ihr Browser kein HTML5-Audio abspielen. </audio>"
 }
 
 function getXmlChildNodeWithName(x, name) {
@@ -427,7 +487,8 @@ function showStationInfoHTML(x, app_id) {
             });
     
             const player = document.createElement('li');
-            player.innerHTML = createAudioControlHTML(x);
+            // player.innerHTML = createAudioControlHTML(x);
+            player.appendChild(createAudioControlElement(x));
     
             toplist.appendChild(player)
 
